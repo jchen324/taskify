@@ -27,9 +27,7 @@ const SingleTodo = ({ todo, todos, setTodos }: Props) => {
     setEdit(false);
   };
 
-  const handleEdit = (e: React.FormEvent, id: number) => {
-    e.preventDefault();
-
+  const handleEdit = (id: number) => {
     setTodos(
       todos.map((todo) => (todo.id === id ? { ...todo, todo: editTodo } : todo))
     );
@@ -43,7 +41,13 @@ const SingleTodo = ({ todo, todos, setTodos }: Props) => {
   }, [edit]);
 
   return (
-    <form className="todos__single" onSubmit={(e) => handleEdit(e, todo.id)}>
+    <form
+      className="todos__single"
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleEdit(todo.id);
+      }}
+    >
       {edit ? (
         <input
           ref={inputRef}
@@ -61,8 +65,10 @@ const SingleTodo = ({ todo, todos, setTodos }: Props) => {
         <span
           className="icon"
           onClick={() => {
-            if (!edit && !todo.isDone) {
+            if (!edit) {
               setEdit(!edit);
+            } else {
+              handleEdit(todo.id);
             }
           }}
         >
